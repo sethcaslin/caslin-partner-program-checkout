@@ -1,5 +1,7 @@
-<!-- BEGIN:nextjs-agent-rules -->
-# This is NOT the Next.js you know
+# Project Instructions
 
-This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code. Heed deprecation notices.
-<!-- END:nextjs-agent-rules -->
+- Never mention Codex as a co author in commit messages.
+- Do not use comments when writing code.
+- Explain results in plain, clear English.
+- Verify work before reporting back whenever possible.
+- This project uses Next.js 16. Read `node_modules/next/dist/docs/` before changing framework-specific code.

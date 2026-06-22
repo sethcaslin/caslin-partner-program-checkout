@@ -8,8 +8,7 @@ import {
 } from "@stripe/react-stripe-js/checkout"
 import { loadStripe } from "@stripe/stripe-js"
 import type { StripeCheckoutElementsSdkOptions } from "@stripe/stripe-js"
-import { ArrowRight } from "@phosphor-icons/react/dist/csr/ArrowRight"
-import { CheckCircle } from "@phosphor-icons/react/dist/csr/CheckCircle"
+import { LockKey } from "@phosphor-icons/react/dist/csr/LockKey"
 import { SpinnerGap } from "@phosphor-icons/react/dist/csr/SpinnerGap"
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
@@ -118,24 +117,11 @@ function CheckoutPaymentFields({ amountLabel }: { amountLabel: string }) {
 
   return (
     <form className="grid gap-5" onSubmit={handleSubmit}>
-      <div className="rounded-[14px] border border-slate-200 bg-white p-4 shadow-[0_16px_36px_-30px_rgba(15,23,42,0.8)]">
-        <div className="mb-3 flex items-center justify-between gap-4 text-sm">
-          <span className="font-extrabold text-slate-500">Due today</span>
-          <span className="font-heading text-2xl font-black text-slate-950">
-            {displayAmount}
-          </span>
-        </div>
-        <div className="flex items-center gap-2 text-xs font-bold text-[var(--program-success)]">
-          <CheckCircle weight="fill" aria-hidden="true" />
-          Secure payment fields are handled by Stripe.
-        </div>
-      </div>
-
       <div className="grid gap-4">
         <div className="grid gap-2">
           <label
             htmlFor="checkout-email"
-            className="text-sm font-extrabold text-slate-700"
+            className="text-sm font-extrabold text-slate-800"
           >
             Email for onboarding
           </label>
@@ -149,10 +135,13 @@ function CheckoutPaymentFields({ amountLabel }: { amountLabel: string }) {
             placeholder="you@example.com"
             className="h-12 rounded-[10px] border border-slate-200 bg-white px-3 text-base font-semibold text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-[var(--program-blue)] focus:ring-3 focus:ring-[var(--program-blue)]/15"
           />
+          <p className="text-[0.8rem] font-medium text-slate-500">
+            Use the email where you want to receive onboarding access.
+          </p>
         </div>
 
         <div className="grid gap-2">
-          <div className="text-sm font-extrabold text-slate-700">
+          <div className="text-sm font-extrabold text-slate-800">
             Payment details
           </div>
           <PaymentElement
@@ -179,11 +168,25 @@ function CheckoutPaymentFields({ amountLabel }: { amountLabel: string }) {
         </div>
       </div>
 
+      <div className="flex items-center justify-between gap-4 rounded-[14px] border border-slate-200 bg-slate-50 px-4 py-3.5">
+        <div>
+          <div className="text-sm font-extrabold text-slate-800">
+            Total due today
+          </div>
+          <div className="text-xs font-medium text-slate-500">
+            One-time enrollment payment
+          </div>
+        </div>
+        <div className="font-heading text-2xl font-black text-slate-950">
+          {displayAmount}
+        </div>
+      </div>
+
       <Button
         type="submit"
         size="lg"
         disabled={!canSubmit}
-        className="h-13 w-full rounded-[10px] bg-[var(--program-blue)] text-base font-extrabold shadow-[0_18px_40px_-24px_rgba(37,87,230,0.85)] transition-transform hover:bg-[var(--program-blue-strong)] active:scale-[0.98]"
+        className="h-13 w-full rounded-[12px] bg-[var(--program-blue)] text-base font-extrabold text-white shadow-[0_20px_45px_-20px_rgba(37,87,230,0.9)] transition-transform hover:bg-[var(--program-blue-strong)] active:scale-[0.98] disabled:bg-[var(--program-blue-soft)] disabled:text-[var(--program-blue)]/55 disabled:opacity-100! disabled:shadow-none"
       >
         {isSubmitting ? (
           <>
@@ -192,15 +195,25 @@ function CheckoutPaymentFields({ amountLabel }: { amountLabel: string }) {
           </>
         ) : (
           <>
-            Pay {displayAmount}
-            <ArrowRight data-icon="inline-end" weight="bold" />
+            <LockKey data-icon="inline-start" weight="fill" />
+            Complete enrollment — {amountLabel}
           </>
         )}
       </Button>
 
-      <p className="text-center text-sm font-medium text-slate-500">
-        Complete your enrollment without leaving this checkout.
-      </p>
+      <div className="grid gap-1 text-center">
+        <p className="flex items-center justify-center gap-1.5 text-sm font-semibold text-slate-600">
+          <LockKey
+            weight="fill"
+            className="text-[var(--program-success)]"
+            aria-hidden="true"
+          />
+          One-time payment · Securely processed by Stripe
+        </p>
+        <p className="text-sm text-slate-500">
+          After payment, check your inbox for your onboarding instructions.
+        </p>
+      </div>
 
       {error || checkoutError ? (
         <Alert variant="destructive" aria-live="polite">
@@ -261,7 +274,7 @@ export function CheckoutForm({ paymentPlanId, amountLabel }: CheckoutFormProps) 
                 variables: {
                   colorPrimary: "#2557e6",
                   colorText: "#101522",
-                  colorTextSecondary: "#697288",
+                  colorTextSecondary: "#5b6678",
                   colorBackground: "#ffffff",
                   colorDanger: "#b42318",
                   borderRadius: "10px",
@@ -301,11 +314,17 @@ export function CheckoutForm({ paymentPlanId, amountLabel }: CheckoutFormProps) 
 
   if (sessionState.status === "loading") {
     return (
-      <div className="grid gap-4 rounded-[16px] border border-slate-200 bg-slate-50 p-5">
-        <div className="h-5 w-44 animate-pulse rounded bg-slate-200" />
-        <div className="h-14 animate-pulse rounded-[10px] bg-white" />
-        <div className="h-36 animate-pulse rounded-[10px] bg-white" />
-        <div className="h-13 animate-pulse rounded-[10px] bg-[var(--program-blue)]/20" />
+      <div className="grid gap-5">
+        <div className="grid gap-2">
+          <div className="h-4 w-40 animate-pulse rounded bg-slate-200" />
+          <div className="h-12 animate-pulse rounded-[10px] bg-slate-100" />
+        </div>
+        <div className="grid gap-2">
+          <div className="h-4 w-32 animate-pulse rounded bg-slate-200" />
+          <div className="h-36 animate-pulse rounded-[10px] bg-slate-100" />
+        </div>
+        <div className="h-16 animate-pulse rounded-[14px] bg-slate-100" />
+        <div className="h-13 animate-pulse rounded-[12px] bg-[var(--program-blue)]/15" />
       </div>
     )
   }

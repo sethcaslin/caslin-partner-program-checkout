@@ -1,9 +1,10 @@
-import { ArrowRight } from "@phosphor-icons/react/dist/ssr/ArrowRight"
 import { CheckCircle } from "@phosphor-icons/react/dist/ssr/CheckCircle"
-import { CreditCard } from "@phosphor-icons/react/dist/ssr/CreditCard"
+import { HandCoins } from "@phosphor-icons/react/dist/ssr/HandCoins"
+import { Handshake } from "@phosphor-icons/react/dist/ssr/Handshake"
 import { LockKey } from "@phosphor-icons/react/dist/ssr/LockKey"
+import { Package } from "@phosphor-icons/react/dist/ssr/Package"
+import { Phone } from "@phosphor-icons/react/dist/ssr/Phone"
 import { ShieldCheck } from "@phosphor-icons/react/dist/ssr/ShieldCheck"
-import { Sparkle } from "@phosphor-icons/react/dist/ssr/Sparkle"
 
 import { CheckoutForm } from "@/components/checkout/checkout-form"
 import { Badge } from "@/components/ui/badge"
@@ -25,10 +26,17 @@ const trainingPoints = [
   "When a deal is ready, the team brings funding, buyers, and closing support.",
 ]
 
-const decisionPoints = [
-  "Funding support",
-  "Buyer support",
-  "Onboarding after payment",
+const programChips = [
+  { label: "Lead system", icon: Phone },
+  { label: "Funding support", icon: HandCoins },
+  { label: "Buyer support", icon: Handshake },
+]
+
+const enrollmentIncludes = [
+  "Caslin Lead System access",
+  "Funding & buyer support",
+  "Guided onboarding after payment",
+  "Ongoing closing support",
 ]
 
 const proofPayments = [
@@ -50,13 +58,6 @@ const evenIfPoints = [
   "You have no idea where to find motivated sellers or how these opportunities work.",
   "You have never raised money, found buyers, or closed a transaction.",
   "You have a full-time job, are in school, or only have a few hours per week.",
-]
-
-const nextSteps = [
-  "Enter your email and payment details in the secure form.",
-  "Complete your enrollment without opening another checkout page.",
-  "Use the same email you want for onboarding access.",
-  "Watch for your next-step email after payment.",
 ]
 
 function CheckItem({ children }: { children: React.ReactNode }) {
@@ -100,42 +101,42 @@ function ProofSlip({
 
 export default function Home() {
   return (
-    <main className="min-h-[100dvh] overflow-hidden bg-[var(--program-bg)] text-slate-950">
-      <section className="mx-auto grid w-full max-w-[1400px] gap-10 px-4 py-6 sm:px-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(420px,0.78fr)] lg:px-10 lg:py-10">
-        <div className="flex min-h-[calc(100dvh-5rem)] flex-col justify-between gap-10 rounded-none lg:pr-4">
+    <main className="program-surface min-h-[100dvh] overflow-hidden text-slate-950">
+      <section className="relative z-10 mx-auto grid w-full max-w-[1400px] gap-10 px-4 py-6 sm:px-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(420px,0.78fr)] lg:px-10 lg:py-10">
+        <div className="flex flex-col gap-12 lg:pr-4">
           <div>
-            <div className="mb-14 flex items-center justify-between gap-4">
-              <div className="text-sm font-extrabold uppercase text-[var(--program-blue)]">
-                Caslin Partner Program
-              </div>
-              <Badge className="hidden rounded-full bg-white px-3 py-1 text-[0.68rem] font-extrabold uppercase text-[var(--program-success)] ring-1 ring-emerald-100 sm:inline-flex">
-                Secure enrollment
-              </Badge>
+            <div className="mb-10 text-sm font-extrabold uppercase tracking-wide text-[var(--program-blue)]">
+              Caslin Partner Program
             </div>
 
             <div className="max-w-[760px]">
-              <p className="mb-5 text-xs font-extrabold uppercase text-[var(--program-blue)]">
+              <p className="mb-5 text-xs font-extrabold uppercase tracking-wide text-[var(--program-blue)]">
                 One-time enrollment
               </p>
-              <h1 className="text-[clamp(2.7rem,6vw,5.85rem)] font-black leading-[0.97] text-slate-950">
-                Start finding real estate opportunities.{" "}
+              <h1 className="text-[clamp(2.4rem,4.8vw,4.4rem)] font-black leading-[1.02] text-slate-950">
+                Find real estate opportunities.{" "}
                 <span className="text-[var(--program-blue)]">
                   We help you close them.
                 </span>
               </h1>
-              <p className="mt-7 max-w-[650px] text-lg leading-8 text-slate-600 sm:text-xl">
-                Enroll in the Caslin Partner Program, learn the phone-first
-                lead system, and move into onboarding right after payment.
+              <p className="mt-6 max-w-[620px] text-lg leading-8 text-slate-600">
+                Get the Caslin Lead System, guided onboarding, funding support,
+                and buyer support.
               </p>
             </div>
 
             <div className="mt-7 flex flex-wrap gap-2">
-              {decisionPoints.map((point) => (
+              {programChips.map(({ label, icon: Icon }) => (
                 <div
-                  key={point}
-                  className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-extrabold text-slate-700 shadow-[0_14px_35px_-30px_rgba(15,23,42,0.75)]"
+                  key={label}
+                  className="flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-extrabold text-slate-700 shadow-[0_14px_35px_-30px_rgba(15,23,42,0.75)]"
                 >
-                  {point}
+                  <Icon
+                    weight="fill"
+                    className="text-[var(--program-blue)]"
+                    aria-hidden="true"
+                  />
+                  {label}
                 </div>
               ))}
             </div>
@@ -149,7 +150,7 @@ export default function Home() {
 
           <div className="grid gap-7">
             <div>
-              <div className="mb-4 text-xs font-extrabold uppercase text-[var(--program-blue)]">
+              <div className="mb-4 text-xs font-extrabold uppercase tracking-wide text-[var(--program-blue)]">
                 Documented partner payouts
               </div>
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
@@ -196,43 +197,40 @@ export default function Home() {
         </div>
 
         <aside className="lg:self-start">
-          <Card className="rounded-[22px] border-slate-200/90 bg-white shadow-[0_36px_90px_-48px_rgba(15,23,42,0.65)]">
+          <Card className="checkout-card overflow-hidden rounded-[22px] border-slate-200/90 bg-white">
             <CardHeader className="gap-4 p-6 pb-0 sm:p-8 sm:pb-0">
-              <div className="flex items-start gap-3">
-                <div className="grid size-11 place-items-center rounded-full bg-slate-100 text-slate-700">
-                  <LockKey aria-hidden="true" />
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex items-start gap-3">
+                  <div className="grid size-11 place-items-center rounded-full bg-[var(--program-blue-soft)] text-[var(--program-blue)]">
+                    <LockKey weight="fill" aria-hidden="true" />
+                  </div>
+                  <div>
+                    <CardTitle className="font-heading text-xl font-extrabold">
+                      Secure checkout
+                    </CardTitle>
+                    <CardDescription className="mt-1 text-sm text-slate-500">
+                      Your information is protected by Stripe.
+                    </CardDescription>
+                  </div>
                 </div>
-                <div>
-                  <CardTitle className="font-heading text-xl font-extrabold">
-                    Secure checkout
-                  </CardTitle>
-                  <CardDescription className="mt-1 text-sm text-slate-500">
-                    Your information is protected by Stripe.
-                  </CardDescription>
-                </div>
+                <Badge className="shrink-0 rounded-full bg-emerald-50 px-3 py-1 text-[0.62rem] font-extrabold uppercase tracking-wide text-[var(--program-success)] ring-1 ring-emerald-100">
+                  Secure enrollment
+                </Badge>
               </div>
               <Separator />
             </CardHeader>
 
             <CardContent className="p-6 sm:p-8">
-              <div className="grid gap-7">
+              <div className="grid gap-6">
                 <div>
-                  <div className="mb-2 flex flex-wrap items-center justify-between gap-3">
-                    <h2 className="font-heading text-2xl font-extrabold">
-                      {checkoutProduct.name}
-                    </h2>
-                    <Badge className="rounded-full bg-[var(--program-blue-soft)] px-3 py-1 text-[var(--program-blue)]">
-                      {primaryPlan.label}
-                    </Badge>
-                  </div>
-                  <p className="text-sm text-slate-500">
+                  <h2 className="font-heading text-2xl font-extrabold">
+                    {checkoutProduct.name}
+                  </h2>
+                  <p className="mt-1 text-sm text-slate-500">
                     {checkoutProduct.shortDescription}
                   </p>
-                </div>
-
-                <div>
-                  <div className="flex items-end gap-3">
-                    <div className="font-heading text-[clamp(3.4rem,7vw,5rem)] font-black leading-none">
+                  <div className="mt-5 flex items-end gap-3">
+                    <div className="font-heading text-[clamp(3rem,7vw,4.4rem)] font-black leading-none">
                       {primaryPlan.displayAmount}
                     </div>
                     <div className="pb-2 text-lg font-bold uppercase text-slate-500">
@@ -244,14 +242,14 @@ export default function Home() {
                   </p>
                 </div>
 
-                <div className="rounded-[16px] border border-slate-200 bg-slate-50 p-5">
+                <div className="rounded-[16px] border border-[var(--program-blue-soft)] bg-[var(--program-blue-soft)]/30 p-5">
                   <div className="mb-4 flex items-center gap-2 text-sm font-extrabold text-[var(--program-blue)]">
-                    <Sparkle weight="fill" aria-hidden="true" />
-                    What happens after payment
+                    <Package weight="fill" aria-hidden="true" />
+                    Your enrollment includes
                   </div>
                   <ul className="grid gap-3">
-                    {nextSteps.map((step) => (
-                      <CheckItem key={step}>{step}</CheckItem>
+                    {enrollmentIncludes.map((item) => (
+                      <CheckItem key={item}>{item}</CheckItem>
                     ))}
                   </ul>
                 </div>
@@ -261,50 +259,17 @@ export default function Home() {
                   amountLabel={primaryPlan.displayAmount}
                 />
 
-                <div className="grid gap-5">
-                  <div className="flex items-center gap-3">
-                    <Separator className="flex-1" />
-                    <span className="text-xs font-bold uppercase text-slate-400">
-                      We accept
-                    </span>
-                    <Separator className="flex-1" />
-                  </div>
-                  <div className="grid grid-cols-2 gap-2 text-center text-xs font-extrabold uppercase text-slate-600 sm:grid-cols-4">
-                    {["Visa", "Mastercard", "Amex", "Discover"].map((method) => (
-                      <div
-                        key={method}
-                        className="rounded-md border border-slate-200 bg-white px-3 py-2"
-                      >
-                        {method}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 gap-3 text-sm text-slate-600 sm:grid-cols-3">
-                  <div className="flex items-center gap-2">
+                <div className="flex flex-col items-center gap-2 border-t border-slate-200 pt-5 text-center">
+                  <div className="flex items-center justify-center gap-2 text-sm font-semibold text-slate-600">
                     <ShieldCheck
                       weight="fill"
-                      className="text-[var(--program-blue)]"
+                      className="text-[var(--program-success)]"
                       aria-hidden="true"
                     />
-                    Encrypted payment
+                    Encrypted &amp; secured by Stripe
                   </div>
-                  <div className="flex items-center gap-2">
-                    <CreditCard
-                      weight="fill"
-                      className="text-[var(--program-blue)]"
-                      aria-hidden="true"
-                    />
-                    Card entry here
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <ArrowRight
-                      weight="bold"
-                      className="text-[var(--program-blue)]"
-                      aria-hidden="true"
-                    />
-                    Onboarding email
+                  <div className="text-xs font-bold uppercase tracking-wide text-slate-400">
+                    Visa · Mastercard · Amex · Discover
                   </div>
                 </div>
               </div>

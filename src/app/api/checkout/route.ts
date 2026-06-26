@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server"
+import type Stripe from "stripe"
 
 import { checkoutProduct, getPaymentPlan } from "@/lib/checkout"
 import { getStripe } from "@/lib/stripe"
@@ -12,9 +13,9 @@ type CheckoutRequest = {
 export async function POST(request: Request) {
   try {
     const body = (await request.json().catch(() => ({}))) as CheckoutRequest
-    const paymentPlan = getPaymentPlan(body.paymentPlan ?? "pay_in_full")
+    const plan = getPaymentPlan(body.paymentPlan ?? "pay_in_full")
 
-    if (!paymentPlan) {
+    if (!plan) {
       return NextResponse.json(
         { error: "This payment option is not available." },
         { status: 400 }
@@ -35,41 +36,77 @@ export async function POST(request: Request) {
       /\/$/,
       ""
     )
+    const returnUrl = `${appUrl}/thank-you?session_id={CHECKOUT_SESSION_ID}`
+    const metadata = {
+      product: checkoutProduct.slug,
+      payment_plan: plan.id,
+    }
 
-    const session = await stripe.checkout.sessions.create({
-      mode: "payment",
-      ui_mode: "elements",
-      adaptive_pricing: {
-        enabled: false,
-      },
-      return_url: `${appUrl}/thank-you?session_id={CHECKOUT_SESSION_ID}`,
-      billing_address_collection: "auto",
-      customer_creation: "if_required",
-      payment_method_types: ["card"],
-      line_items: [
-        {
-          quantity: 1,
-          price_data: {
-            currency: paymentPlan.currency,
-            unit_amount: paymentPlan.unitAmount,
-            product_data: {
-              name: checkoutProduct.name,
-              description: checkoutProduct.shortDescription,
+    let params: Stripe.Checkout.SessionCreateParams
+
+    if (plan.mode === "subscription") {
+      params = {
+        mode: "subscription",
+        ui_mode: "elements",
+        return_url: returnUrl,
+        billing_address_collection: "auto",
+        payment_method_types: ["card"],
+        line_items: [
+          {
+            quantity: 1,
+            price_data: {
+              currency: plan.currency,
+              unit_amount: plan.unitAmount,
+              recurring: {
+                interval: plan.interval,
+              },
+              product_data: {
+                name: checkoutProduct.name,
+                description: checkoutProduct.shortDescription,
+              },
             },
           },
+        ],
+        subscription_data: {
+          metadata: {
+            ...metadata,
+            installments: String(plan.installments),
+          },
         },
-      ],
-      metadata: {
-        product: checkoutProduct.slug,
-        payment_plan: paymentPlan.id,
-      },
-      payment_intent_data: {
-        metadata: {
-          product: checkoutProduct.slug,
-          payment_plan: paymentPlan.id,
+        metadata,
+      }
+    } else {
+      params = {
+        mode: "payment",
+        ui_mode: "elements",
+        adaptive_pricing: {
+          enabled: false,
         },
-      },
-    })
+        return_url: returnUrl,
+        billing_address_collection: "auto",
+        customer_creation: "if_required",
+        payment_method_types: ["card"],
+        line_items: [
+          {
+            quantity: 1,
+            price_data: {
+              currency: plan.currency,
+              unit_amount: plan.unitAmount,
+              product_data: {
+                name: checkoutProduct.name,
+                description: checkoutProduct.shortDescription,
+              },
+            },
+          },
+        ],
+        metadata,
+        payment_intent_data: {
+          metadata,
+        },
+      }
+    }
+
+    const session = await stripe.checkout.sessions.create(params)
 
     if (!session.client_secret) {
       return NextResponse.json(

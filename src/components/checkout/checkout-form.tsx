@@ -13,10 +13,11 @@ import { SpinnerGap } from "@phosphor-icons/react/dist/csr/SpinnerGap"
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button"
+import type { PaymentPlan } from "@/lib/checkout"
+import { CardBrands } from "./card-brands"
 
 type CheckoutFormProps = {
-  paymentPlanId: string
-  amountLabel: string
+  plan: PaymentPlan
 }
 
 type CheckoutResponse = {
@@ -46,7 +47,7 @@ async function createCheckoutSession(paymentPlanId: string) {
   return data.clientSecret
 }
 
-function CheckoutPaymentFields({ amountLabel }: { amountLabel: string }) {
+function CheckoutPaymentFields({ plan }: { plan: PaymentPlan }) {
   const checkoutState = useCheckoutElements()
   const [email, setEmail] = useState("")
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -55,7 +56,7 @@ function CheckoutPaymentFields({ amountLabel }: { amountLabel: string }) {
 
   const checkout =
     checkoutState.type === "success" ? checkoutState.checkout : null
-  const displayAmount = checkout?.total.total.amount ?? amountLabel
+  const displayAmount = checkout?.total.total.amount ?? plan.dueTodayLabel
   const trimmedEmail = email.trim()
   const hasValidEmail = emailPattern.test(trimmedEmail)
   const canSubmit = Boolean(checkout?.canConfirm) && hasValidEmail && !isSubmitting
@@ -123,7 +124,7 @@ function CheckoutPaymentFields({ amountLabel }: { amountLabel: string }) {
             htmlFor="checkout-email"
             className="text-sm font-extrabold text-slate-800"
           >
-            Email for onboarding
+            Email
           </label>
           <input
             id="checkout-email"
@@ -141,8 +142,11 @@ function CheckoutPaymentFields({ amountLabel }: { amountLabel: string }) {
         </div>
 
         <div className="grid gap-2">
-          <div className="text-sm font-extrabold text-slate-800">
-            Payment details
+          <div className="flex items-center justify-between gap-2">
+            <div className="text-sm font-extrabold text-slate-800">
+              Card Details
+            </div>
+            <CardBrands />
           </div>
           <PaymentElement
             className="embedded-payment-element rounded-[10px]"
@@ -174,7 +178,7 @@ function CheckoutPaymentFields({ amountLabel }: { amountLabel: string }) {
             Total due today
           </div>
           <div className="text-xs font-medium text-slate-500">
-            One-time enrollment payment
+            {plan.dueTodayNote}
           </div>
         </div>
         <div className="font-heading text-2xl font-black text-slate-950">
@@ -196,7 +200,7 @@ function CheckoutPaymentFields({ amountLabel }: { amountLabel: string }) {
         ) : (
           <>
             <LockKey data-icon="inline-start" weight="fill" />
-            Complete enrollment — {amountLabel}
+            {plan.buttonLabel}
           </>
         )}
       </Button>
@@ -208,7 +212,9 @@ function CheckoutPaymentFields({ amountLabel }: { amountLabel: string }) {
             className="text-[var(--program-success)]"
             aria-hidden="true"
           />
-          One-time payment · Securely processed by Stripe
+          {plan.mode === "subscription"
+            ? "3 monthly payments · Securely processed by Stripe"
+            : "One-time payment · Securely processed by Stripe"}
         </p>
         <p className="text-sm text-slate-500">
           After payment, check your inbox for your onboarding instructions.
@@ -225,7 +231,7 @@ function CheckoutPaymentFields({ amountLabel }: { amountLabel: string }) {
   )
 }
 
-export function CheckoutForm({ paymentPlanId, amountLabel }: CheckoutFormProps) {
+export function CheckoutForm({ plan }: CheckoutFormProps) {
   const [sessionState, setSessionState] = useState<
     | { status: "loading" }
     | { status: "ready"; clientSecret: string }
@@ -236,7 +242,7 @@ export function CheckoutForm({ paymentPlanId, amountLabel }: CheckoutFormProps) 
   useEffect(() => {
     let isActive = true
 
-    createCheckoutSession(paymentPlanId)
+    createCheckoutSession(plan.id)
       .then((secret) => {
         if (isActive) {
           setSessionState({ status: "ready", clientSecret: secret })
@@ -257,7 +263,7 @@ export function CheckoutForm({ paymentPlanId, amountLabel }: CheckoutFormProps) 
     return () => {
       isActive = false
     }
-  }, [paymentPlanId, requestAttempt])
+  }, [plan.id, requestAttempt])
 
   const checkoutOptions = useMemo<StripeCheckoutElementsSdkOptions | null>(
     () =>
@@ -357,7 +363,7 @@ export function CheckoutForm({ paymentPlanId, amountLabel }: CheckoutFormProps) 
 
   return (
     <CheckoutElementsProvider stripe={stripePromise} options={checkoutOptions}>
-      <CheckoutPaymentFields amountLabel={amountLabel} />
+      <CheckoutPaymentFields plan={plan} />
     </CheckoutElementsProvider>
   )
 }

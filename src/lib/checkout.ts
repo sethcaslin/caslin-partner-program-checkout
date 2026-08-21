@@ -21,24 +21,6 @@ export const paymentPlans = [
     unitAmount: 499700,
     currency: "usd",
   },
-  {
-    id: "installments_3",
-    mode: "subscription",
-    label: "3 monthly payments",
-    selectorPrice: "$1,866/mo",
-    selectorNote: "3 payments · $5,598 total",
-    heroAmount: "$1,866",
-    heroUnit: "USD /mo",
-    heroCadence:
-      "3 monthly payments of $1,866 ($5,598). Cancels automatically after the 3rd payment.",
-    dueTodayLabel: "$1,866",
-    dueTodayNote: "First of 3 monthly payments",
-    buttonLabel: "Start plan — $1,866 today",
-    unitAmount: 186600,
-    currency: "usd",
-    interval: "month",
-    installments: 3,
-  },
 ] as const
 
 export type PaymentPlan = (typeof paymentPlans)[number]

@@ -212,9 +212,7 @@ function CheckoutPaymentFields({ plan }: { plan: PaymentPlan }) {
             className="text-[var(--program-success)]"
             aria-hidden="true"
           />
-          {plan.mode === "subscription"
-            ? "3 monthly payments · Securely processed by Stripe"
-            : "One-time payment · Securely processed by Stripe"}
+          One-time payment · Securely processed by Stripe
         </p>
         <p className="text-sm text-slate-500">
           After payment, check your inbox for your onboarding instructions.

@@ -42,68 +42,32 @@ export async function POST(request: Request) {
       payment_plan: plan.id,
     }
 
-    let params: Stripe.Checkout.SessionCreateParams
-
-    if (plan.mode === "subscription") {
-      params = {
-        mode: "subscription",
-        ui_mode: "elements",
-        return_url: returnUrl,
-        billing_address_collection: "auto",
-        payment_method_types: ["card"],
-        line_items: [
-          {
-            quantity: 1,
-            price_data: {
-              currency: plan.currency,
-              unit_amount: plan.unitAmount,
-              recurring: {
-                interval: plan.interval,
-              },
-              product_data: {
-                name: checkoutProduct.name,
-                description: checkoutProduct.shortDescription,
-              },
+    const params: Stripe.Checkout.SessionCreateParams = {
+      mode: "payment",
+      ui_mode: "elements",
+      adaptive_pricing: {
+        enabled: false,
+      },
+      return_url: returnUrl,
+      billing_address_collection: "auto",
+      customer_creation: "if_required",
+      line_items: [
+        {
+          quantity: 1,
+          price_data: {
+            currency: plan.currency,
+            unit_amount: plan.unitAmount,
+            product_data: {
+              name: checkoutProduct.name,
+              description: checkoutProduct.shortDescription,
             },
           },
-        ],
-        subscription_data: {
-          metadata: {
-            ...metadata,
-            installments: String(plan.installments),
-          },
         },
+      ],
+      metadata,
+      payment_intent_data: {
         metadata,
-      }
-    } else {
-      params = {
-        mode: "payment",
-        ui_mode: "elements",
-        adaptive_pricing: {
-          enabled: false,
-        },
-        return_url: returnUrl,
-        billing_address_collection: "auto",
-        customer_creation: "if_required",
-        payment_method_types: ["card"],
-        line_items: [
-          {
-            quantity: 1,
-            price_data: {
-              currency: plan.currency,
-              unit_amount: plan.unitAmount,
-              product_data: {
-                name: checkoutProduct.name,
-                description: checkoutProduct.shortDescription,
-              },
-            },
-          },
-        ],
-        metadata,
-        payment_intent_data: {
-          metadata,
-        },
-      }
+      },
     }
 
     const session = await stripe.checkout.sessions.create(params)

@@ -125,10 +125,13 @@ test("requires versioned purchase terms on the checkout form", async () => {
   assert.match(form, /\/api\/checkout\/accept-terms/)
   assert.match(form, /\/terms/)
   assert.match(form, /\/refund-policy/)
-  assert.match(form, /including Klarna/)
+  assert.match(form, /paymentMethodOrder/)
+  assert.match(form, /"klarna"/)
+  assert.match(form, /Pay over time, if eligible/)
+  assert.match(form, /country: "US"/)
 })
 
-test("publishes the friendly terms and refund policy routes", async () => {
+test("publishes the purchase terms and refund policy routes", async () => {
   const [terms, refundPolicy] = await Promise.all([
     readFile(new URL("../src/app/terms/page.tsx", import.meta.url), "utf8"),
     readFile(
@@ -137,7 +140,7 @@ test("publishes the friendly terms and refund policy routes", async () => {
     ),
   ])
 
-  assert.match(terms, /Friendly Purchase Terms/)
+  assert.match(terms, /Purchase Terms/)
   assert.match(terms, /USD\s+4,997 or USD 999/)
   assert.match(refundPolicy, /200 calls per week/)
   assert.match(refundPolicy, /four consecutive weeks/)

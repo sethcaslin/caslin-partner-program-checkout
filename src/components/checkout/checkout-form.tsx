@@ -207,6 +207,13 @@ function CheckoutPaymentFields({ plan }: { plan: PaymentPlan }) {
           <PaymentElement
             className="embedded-payment-element rounded-[10px]"
             options={{
+              paymentMethodOrder: [
+                "klarna",
+                "card",
+                "amazon_pay",
+                "cashapp",
+                "link",
+              ],
               layout: {
                 type: "accordion",
                 defaultCollapsed: false,
@@ -215,7 +222,7 @@ function CheckoutPaymentFields({ plan }: { plan: PaymentPlan }) {
               fields: {
                 billingDetails: {
                   address: {
-                    country: "never",
+                    country: "auto",
                     postalCode: "auto",
                   },
                 },
@@ -242,9 +249,19 @@ function CheckoutPaymentFields({ plan }: { plan: PaymentPlan }) {
         </div>
       </div>
 
-      <div className="rounded-[12px] border border-blue-100 bg-blue-50/70 px-4 py-3 text-sm leading-6 text-slate-600">
-        Flexible payment options, including Klarna, may be available to
-        eligible customers. Available plans and approval are decided by Klarna.
+      <div className="rounded-[12px] border border-[#f3a7bd] bg-[#fff2f6] px-4 py-3">
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="rounded bg-[#ffb3c7] px-2 py-0.5 text-sm font-black text-slate-950">
+            Klarna.
+          </span>
+          <span className="text-sm font-extrabold text-slate-800">
+            Pay over time, if eligible
+          </span>
+        </div>
+        <p className="mt-1.5 text-xs leading-5 text-slate-600">
+          Available plans and approval are decided by Klarna based on your
+          location and purchase.
+        </p>
       </div>
 
       <div className="grid gap-2 rounded-[12px] border border-slate-200 bg-white px-4 py-3.5">
@@ -268,7 +285,7 @@ function CheckoutPaymentFields({ plan }: { plan: PaymentPlan }) {
               rel="noreferrer"
               className="font-extrabold text-[var(--program-blue)] underline underline-offset-2"
             >
-              Friendly Purchase Terms
+              Purchase Terms
             </Link>{" "}
             and{" "}
             <Link
@@ -370,6 +387,13 @@ export function CheckoutForm({ plan }: CheckoutFormProps) {
       sessionState.status === "ready"
         ? {
             clientSecret: sessionState.clientSecret,
+            defaultValues: {
+              billingAddress: {
+                address: {
+                  country: "US",
+                },
+              },
+            },
             adaptivePricing: {
               allowed: false,
             },

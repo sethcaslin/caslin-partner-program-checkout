@@ -3,14 +3,14 @@ import type { Metadata } from "next"
 import { PolicyPage } from "@/components/legal/policy-page"
 
 export const metadata: Metadata = {
-  title: "Friendly Purchase Terms | Caslin Partner Program",
+  title: "Purchase Terms | Caslin Partner Program",
   description: "Simple purchase terms for the Caslin Partner Program.",
 }
 
 export default function TermsPage() {
   return (
     <PolicyPage
-      title="Friendly Purchase Terms"
+      title="Purchase Terms"
       description="We wrote these terms in plain English so you know what to expect from us and what we ask from you."
     >
       <section className="legal-summary">
@@ -27,7 +27,7 @@ export default function TermsPage() {
       <section>
         <h2>1. A simple agreement</h2>
         <p>
-          These Friendly Purchase Terms apply when you buy access to the Caslin
+          These Purchase Terms apply when you buy access to the Caslin
           Partner Program from SETH CASLIN LLC. By checking the agreement box
           and completing your purchase, you agree to these terms and our Refund
           Policy.

@@ -39,7 +39,7 @@ export function PolicyPage({
                 {description}
               </p>
               <p className="mt-3 text-sm font-semibold text-slate-500">
-                Effective August 24, 2026
+                Effective August 2026
               </p>
             </div>
           </div>

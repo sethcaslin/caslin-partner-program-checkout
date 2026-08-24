@@ -188,12 +188,10 @@ export default function TermsPage() {
           delay in enforcing a term does not waive it.
         </p>
         <p>
-          Questions are welcome. Use the contact form at{" "}
-          <a href="https://caslinpartnerprogram.com/">
-            caslinpartnerprogram.com
-          </a>{" "}
-          or call (973) 356-7881. Our mailing address is SETH CASLIN LLC, 30 N
-          Gould St, Ste N, Sheridan, WY 82801.
+          Questions are welcome. Email SETH CASLIN LLC at{" "}
+          <a href="mailto:seth@gochrz.com">seth@gochrz.com</a> or call (973)
+          356-7881. Our mailing address is SETH CASLIN LLC, 30 N Gould St, Ste
+          N, Sheridan, WY 82801.
         </p>
       </section>
     </PolicyPage>

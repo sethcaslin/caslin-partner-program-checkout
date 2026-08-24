@@ -71,11 +71,8 @@ export default function RefundPolicyPage() {
         <h2>3. How to request a review</h2>
         <p>
           Send your request within 30 days after the end of your fourth month.
-          Use the contact form at{" "}
-          <a href="https://caslinpartnerprogram.com/">
-            caslinpartnerprogram.com
-          </a>{" "}
-          or call (973) 356-7881 so we can help route it correctly.
+          Email <a href="mailto:seth@gochrz.com">seth@gochrz.com</a> or call
+          (973) 356-7881 so we can help route it correctly.
         </p>
         <p>Please include:</p>
         <ul>
@@ -125,13 +122,10 @@ export default function RefundPolicyPage() {
       <section>
         <h2>Questions?</h2>
         <p>
-          We are happy to clarify the policy before you buy. Contact SETH CASLIN
-          LLC through{" "}
-          <a href="https://caslinpartnerprogram.com/">
-            caslinpartnerprogram.com
-          </a>{" "}
-          or call (973) 356-7881. Our mailing address is 30 N Gould St, Ste N,
-          Sheridan, WY 82801.
+          We are happy to clarify the policy before you buy. Email SETH CASLIN
+          LLC at <a href="mailto:seth@gochrz.com">seth@gochrz.com</a> or call
+          (973) 356-7881. Our mailing address is 30 N Gould St, Ste N, Sheridan,
+          WY 82801.
         </p>
       </section>
     </PolicyPage>

@@ -145,7 +145,7 @@ test("confirms payment without sending a duplicate return URL", async () => {
 })
 
 test("publishes the purchase terms and refund policy routes", async () => {
-  const [checkout, terms, refundPolicy] = await Promise.all([
+  const [checkout, terms, refundPolicy, policyPage] = await Promise.all([
     readFile(
       new URL(
         "../src/components/checkout/checkout-page.tsx",
@@ -158,13 +158,24 @@ test("publishes the purchase terms and refund policy routes", async () => {
       new URL("../src/app/refund-policy/page.tsx", import.meta.url),
       "utf8"
     ),
+    readFile(
+      new URL(
+        "../src/components/legal/policy-page.tsx",
+        import.meta.url
+      ),
+      "utf8"
+    ),
   ])
 
+  assert.match(policyPage, /Effective August 2026/)
+  assert.doesNotMatch(policyPage, /Effective August 24, 2026/)
   assert.match(terms, /Purchase Terms/)
   assert.match(terms, /USD\s+4,997 or USD 999/)
   assert.match(terms, /during your first month/)
   assert.match(terms, /under a signed contract/)
   assert.match(terms, /end of your fourth month/)
+  assert.match(terms, /mailto:seth@gochrz\.com/)
+  assert.doesNotMatch(terms, /Use the contact form at/)
   assert.match(checkout, /200 calls per week for four consecutive weeks/)
   assert.match(checkout, /during your first month/)
   assert.match(checkout, /under a signed contract/)
@@ -174,6 +185,9 @@ test("publishes the purchase terms and refund policy routes", async () => {
   assert.match(refundPolicy, /during your first month/)
   assert.match(refundPolicy, /under a signed contract/)
   assert.match(refundPolicy, /end of your fourth month/)
+  assert.match(refundPolicy, /mailto:seth@gochrz\.com/)
+  assert.doesNotMatch(refundPolicy, /Use the contact form at/)
+  assert.doesNotMatch(refundPolicy, /LLC through/)
   assert.doesNotMatch(checkout, /\$10,000|first 4 months/)
   assert.doesNotMatch(terms, /USD 10,000/)
   assert.doesNotMatch(refundPolicy, /USD 10,000/)

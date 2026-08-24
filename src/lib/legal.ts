@@ -1,6 +1,6 @@
 export const purchaseTerms = {
-  termsVersion: "2026-08-24",
-  refundPolicyVersion: "2026-08-24",
+  termsVersion: "2026-08-24-v2",
+  refundPolicyVersion: "2026-08-24-v2",
   termsPath: "/terms",
   refundPolicyPath: "/refund-policy",
 } as const

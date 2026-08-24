@@ -40,11 +40,11 @@ To qualify, the customer must reasonably document all of the following:
 
 - They followed the Program as instructed.
 - They used leads generated through the Program's process.
-- They completed at least 200 calls per week for four consecutive weeks during their first four months.
-- They did not generate at least USD 10,000 during their first four months.
+- They completed at least 200 calls per week for four consecutive weeks during their first month.
+- They did not put at least one deal under a signed contract by the end of their fourth month. The deal does not need to close by then.
 - They did not copy, share, resell, publish, or misuse the Program's education, systems, or proprietary data.
 
-The customer must submit the request within 30 days after the end of their fourth month and provide reasonable supporting records, such as call logs, CRM records, lead records, and revenue or closing records. SETH CASLIN LLC will review the request in good faith and may ask reasonable follow-up questions.
+The customer must submit the request within 30 days after the end of their fourth month and provide reasonable supporting records, such as call logs, CRM records, lead records, pipeline records, and contract records. SETH CASLIN LLC will review the request in good faith and may ask reasonable follow-up questions.
 
 Approved refunds will cover the Program enrollment amount paid to SETH CASLIN LLC and return through the original payment method. A Klarna customer remains responsible for the Klarna plan until Klarna confirms that the merchant refund has adjusted or closed it. External costs are not refunded.
 

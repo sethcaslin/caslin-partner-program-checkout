@@ -138,8 +138,13 @@ export default function TermsPage() {
           Except for rights that applicable law does not allow you to waive,
           Program purchases are final once payment is completed or access
           begins, whichever happens first. We do stand behind one specific
-          four-month performance promise. The full requirements and request
-          process are in our{" "}
+          promise: follow the Program as instructed, use leads generated through
+          our process, and complete at least 200 calls per week for four
+          consecutive weeks during your first month. If you do not put at least
+          one deal under a signed contract by the end of your fourth month, you
+          may request a refund of your Program enrollment payment. The deal does
+          not need to close by then. The full requirements and request process
+          are in our{" "}
           <a href="/refund-policy">Refund Policy</a>.
         </p>
       </section>

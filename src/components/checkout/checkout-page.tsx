@@ -22,7 +22,7 @@ const fundingIntro =
   "Every qualified project you bring into the Caslin Partner Network is 100% eligible to be funded through the Caslin Funding Engine, so you don't have to worry about funds at any point of time."
 
 const guaranteeCopy =
-  "Follow the program exactly as instructed, use leads generated through our process, complete 200 calls per week for 4 consecutive weeks and if you don't make at least $10,000 in the first 4 months, we'll refund 100% of your investment."
+  "Follow the program exactly as instructed, use leads generated through our process, and complete at least 200 calls per week for four consecutive weeks during your first month. If you do not put at least one deal under a signed contract by the end of your fourth month, we'll refund 100% of your Program enrollment payment, subject to our Refund Policy."
 
 const whatsIncluded = [
   "Distressed lead generation system",

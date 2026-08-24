@@ -27,13 +27,16 @@ export default function RefundPolicyPage() {
       <section>
         <h2>1. The four-month promise</h2>
         <p>
-          If you do the required work during your first four months and do not
-          generate at least USD 10,000, you may request a refund of the Program
-          enrollment amount you paid to SETH CASLIN LLC.
+          If you complete the required work during your first month and do not
+          put at least one deal under a signed contract by the end of your fourth
+          month, you may request a refund of the Program enrollment amount you
+          paid to SETH CASLIN LLC.
         </p>
         <p>
-          Your first four months begin on the date we first provide your Program
-          access.
+          Your first month and first four months begin on the date we first
+          provide your Program access. The deal does not need to close by the end
+          of your fourth month. A signed contract is the result measured for this
+          promise.
         </p>
       </section>
 
@@ -45,11 +48,11 @@ export default function RefundPolicyPage() {
           <li>You used leads generated through the Program process.</li>
           <li>
             You completed at least 200 calls per week for four consecutive weeks
-            during your first four months.
+            during your first month.
           </li>
           <li>
-            You did not generate at least USD 10,000 during your first four
-            months.
+            You did not put at least one deal under a signed contract by the end
+            of your fourth month.
           </li>
           <li>
             You did not copy, record, scrape, share, resell, publish, distribute,
@@ -80,8 +83,7 @@ export default function RefundPolicyPage() {
           <li>Call logs or CRM records showing the required calls.</li>
           <li>Records showing the leads came through the Program process.</li>
           <li>
-            Reasonable revenue, contract, assignment, or closing records for the
-            four-month period.
+            CRM pipeline and contract records covering your first four months.
           </li>
           <li>A short explanation of how you followed the Program.</li>
         </ul>

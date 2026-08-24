@@ -73,8 +73,8 @@ test("builds a versioned server-side terms acceptance record", () => {
   assert.deepEqual(buildTermsAcceptanceMetadata(acceptedAt), {
     terms_accepted: "true",
     terms_accepted_at: "2026-08-24T21:30:00.000Z",
-    terms_version: "2026-08-24",
-    refund_policy_version: "2026-08-24",
+    terms_version: "2026-08-24-v2",
+    refund_policy_version: "2026-08-24-v2",
   })
 })
 
@@ -132,7 +132,14 @@ test("requires versioned purchase terms on the checkout form", async () => {
 })
 
 test("publishes the purchase terms and refund policy routes", async () => {
-  const [terms, refundPolicy] = await Promise.all([
+  const [checkout, terms, refundPolicy] = await Promise.all([
+    readFile(
+      new URL(
+        "../src/components/checkout/checkout-page.tsx",
+        import.meta.url
+      ),
+      "utf8"
+    ),
     readFile(new URL("../src/app/terms/page.tsx", import.meta.url), "utf8"),
     readFile(
       new URL("../src/app/refund-policy/page.tsx", import.meta.url),
@@ -142,9 +149,21 @@ test("publishes the purchase terms and refund policy routes", async () => {
 
   assert.match(terms, /Purchase Terms/)
   assert.match(terms, /USD\s+4,997 or USD 999/)
+  assert.match(terms, /during your first month/)
+  assert.match(terms, /under a signed contract/)
+  assert.match(terms, /end of your fourth month/)
+  assert.match(checkout, /200 calls per week for four consecutive weeks/)
+  assert.match(checkout, /during your first month/)
+  assert.match(checkout, /under a signed contract/)
+  assert.match(checkout, /end of your fourth month/)
   assert.match(refundPolicy, /200 calls per week/)
   assert.match(refundPolicy, /four consecutive weeks/)
-  assert.match(refundPolicy, /USD 10,000/)
+  assert.match(refundPolicy, /during your first month/)
+  assert.match(refundPolicy, /under a signed contract/)
+  assert.match(refundPolicy, /end of your fourth month/)
+  assert.doesNotMatch(checkout, /\$10,000|first 4 months/)
+  assert.doesNotMatch(terms, /USD 10,000/)
+  assert.doesNotMatch(refundPolicy, /USD 10,000/)
 })
 
 test("uses the Seth SC mark for browser and Apple icons", async () => {

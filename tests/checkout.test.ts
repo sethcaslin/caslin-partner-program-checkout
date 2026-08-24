@@ -146,3 +146,16 @@ test("publishes the purchase terms and refund policy routes", async () => {
   assert.match(refundPolicy, /four consecutive weeks/)
   assert.match(refundPolicy, /USD 10,000/)
 })
+
+test("uses the Seth SC mark for browser and Apple icons", async () => {
+  const [icon, favicon, appleIcon] = await Promise.all([
+    readFile(new URL("../src/app/icon.svg", import.meta.url), "utf8"),
+    readFile(new URL("../src/app/favicon.ico", import.meta.url)),
+    readFile(new URL("../src/app/apple-icon.png", import.meta.url)),
+  ])
+
+  assert.match(icon, />SC<\/text>/)
+  assert.match(icon, /fill="#2f5bea"/)
+  assert.ok(favicon.byteLength > 1_000)
+  assert.ok(appleIcon.byteLength > 1_000)
+})

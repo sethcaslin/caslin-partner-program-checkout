@@ -1,5 +1,7 @@
 import type Stripe from "stripe"
 
+import { purchaseTerms } from "./legal.ts"
+
 export const checkoutProduct = {
   name: "Caslin Partner Program",
   slug: "caslin-partner-program",
@@ -55,6 +57,8 @@ export function buildCheckoutSessionParams(
   const metadata = {
     product: checkoutProduct.slug,
     payment_plan: plan.id,
+    terms_version: purchaseTerms.termsVersion,
+    refund_policy_version: purchaseTerms.refundPolicyVersion,
   }
 
   return {

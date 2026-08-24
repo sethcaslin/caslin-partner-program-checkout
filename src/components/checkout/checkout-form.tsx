@@ -1,6 +1,8 @@
 "use client"
 
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react"
+import Link from "next/link"
+import { useRouter } from "next/navigation"
 import {
   CheckoutElementsProvider,
   PaymentElement,
@@ -22,6 +24,11 @@ type CheckoutFormProps = {
 
 type CheckoutResponse = {
   clientSecret?: string
+  error?: string
+}
+
+type TermsAcceptanceResponse = {
+  accepted?: boolean
   error?: string
 }
 
@@ -47,9 +54,32 @@ async function createCheckoutSession(paymentPlanId: string) {
   return data.clientSecret
 }
 
+async function acceptPurchaseTerms(
+  sessionId: string,
+  paymentPlanId: string
+) {
+  const response = await fetch("/api/checkout/accept-terms", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ sessionId, paymentPlan: paymentPlanId }),
+  })
+
+  const data = (await response.json()) as TermsAcceptanceResponse
+
+  if (!response.ok || !data.accepted) {
+    throw new Error(
+      data.error ?? "We could not save your agreement. Please try again."
+    )
+  }
+}
+
 function CheckoutPaymentFields({ plan }: { plan: PaymentPlan }) {
+  const router = useRouter()
   const checkoutState = useCheckoutElements()
   const [email, setEmail] = useState("")
+  const [termsAccepted, setTermsAccepted] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const syncedEmail = useRef("")
@@ -59,7 +89,11 @@ function CheckoutPaymentFields({ plan }: { plan: PaymentPlan }) {
   const displayAmount = checkout?.total.total.amount ?? plan.dueTodayLabel
   const trimmedEmail = email.trim()
   const hasValidEmail = emailPattern.test(trimmedEmail)
-  const canSubmit = Boolean(checkout?.canConfirm) && hasValidEmail && !isSubmitting
+  const canSubmit =
+    Boolean(checkout?.canConfirm) &&
+    hasValidEmail &&
+    termsAccepted &&
+    !isSubmitting
   const checkoutError =
     checkoutState.type === "error"
       ? checkoutState.error.message
@@ -99,8 +133,30 @@ function CheckoutPaymentFields({ plan }: { plan: PaymentPlan }) {
       return
     }
 
+    if (!hasValidEmail) {
+      setError("Please enter a valid email address.")
+      return
+    }
+
+    if (!termsAccepted) {
+      setError("Please agree to the purchase terms and refund policy.")
+      return
+    }
+
     setIsSubmitting(true)
     setError(null)
+
+    try {
+      await acceptPurchaseTerms(checkoutState.checkout.id, plan.id)
+    } catch (acceptanceError) {
+      setError(
+        acceptanceError instanceof Error
+          ? acceptanceError.message
+          : "We could not save your agreement. Please try again."
+      )
+      setIsSubmitting(false)
+      return
+    }
 
     const result = await checkoutState.checkout.confirm({
       returnUrl: `${window.location.origin}/thank-you?session_id=${checkoutState.checkout.id}`,
@@ -113,7 +169,7 @@ function CheckoutPaymentFields({ plan }: { plan: PaymentPlan }) {
       return
     }
 
-    window.location.assign(`/thank-you?session_id=${result.session.id}`)
+    router.push(`/thank-you?session_id=${result.session.id}`)
   }
 
   return (
@@ -144,7 +200,7 @@ function CheckoutPaymentFields({ plan }: { plan: PaymentPlan }) {
         <div className="grid gap-2">
           <div className="flex items-center justify-between gap-2">
             <div className="text-sm font-extrabold text-slate-800">
-              Card Details
+              Payment method
             </div>
             <CardBrands />
           </div>
@@ -186,6 +242,52 @@ function CheckoutPaymentFields({ plan }: { plan: PaymentPlan }) {
         </div>
       </div>
 
+      <div className="rounded-[12px] border border-blue-100 bg-blue-50/70 px-4 py-3 text-sm leading-6 text-slate-600">
+        Flexible payment options, including Klarna, may be available to
+        eligible customers. Available plans and approval are decided by Klarna.
+      </div>
+
+      <div className="grid gap-2 rounded-[12px] border border-slate-200 bg-white px-4 py-3.5">
+        <div className="flex items-start gap-3">
+          <input
+            id="checkout-terms"
+            type="checkbox"
+            required
+            checked={termsAccepted}
+            onChange={(event) => setTermsAccepted(event.target.checked)}
+            className="mt-1 size-4.5 shrink-0 accent-[var(--program-blue)]"
+          />
+          <label
+            htmlFor="checkout-terms"
+            className="text-sm font-semibold leading-6 text-slate-700"
+          >
+            I&apos;ve read and agree to the{" "}
+            <Link
+              href="/terms"
+              target="_blank"
+              rel="noreferrer"
+              className="font-extrabold text-[var(--program-blue)] underline underline-offset-2"
+            >
+              Friendly Purchase Terms
+            </Link>{" "}
+            and{" "}
+            <Link
+              href="/refund-policy"
+              target="_blank"
+              rel="noreferrer"
+              className="font-extrabold text-[var(--program-blue)] underline underline-offset-2"
+            >
+              Refund Policy
+            </Link>
+            .
+          </label>
+        </div>
+        <p className="pl-7.5 text-xs leading-5 text-slate-500">
+          Access includes education, systems, and proprietary data. Refunds are
+          limited to the four-month promise in the Refund Policy.
+        </p>
+      </div>
+
       <Button
         type="submit"
         size="lg"
@@ -212,7 +314,7 @@ function CheckoutPaymentFields({ plan }: { plan: PaymentPlan }) {
             className="text-[var(--program-success)]"
             aria-hidden="true"
           />
-          One-time payment · Securely processed by Stripe
+          One enrollment purchase · Securely processed by Stripe
         </p>
         <p className="text-sm text-slate-500">
           After payment, check your inbox for your onboarding instructions.

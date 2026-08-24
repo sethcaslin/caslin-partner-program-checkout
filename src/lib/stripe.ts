@@ -10,7 +10,7 @@ export function getStripe() {
   }
 
   stripeClient ??= new Stripe(secretKey, {
-    apiVersion: "2026-05-27.dahlia",
+    apiVersion: "2026-07-29.dahlia",
     appInfo: {
       name: "Caslin Partner Program Checkout",
     },

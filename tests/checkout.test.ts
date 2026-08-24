@@ -9,6 +9,11 @@ import {
   payInFullPlan,
   paymentPlans,
 } from "../src/lib/checkout.ts"
+import {
+  buildTermsAcceptanceMetadata,
+  purchaseTerms,
+  sessionCanAcceptTerms,
+} from "../src/lib/legal.ts"
 
 test("offers the original and partner access prices", () => {
   assert.deepEqual(
@@ -45,6 +50,11 @@ test("sends each fixed price and offer identifier to Stripe", () => {
 
   assert.equal(original.line_items?.[0]?.price_data?.unit_amount, 499700)
   assert.equal(original.metadata?.payment_plan, "pay_in_full")
+  assert.equal(original.metadata?.terms_version, purchaseTerms.termsVersion)
+  assert.equal(
+    original.metadata?.refund_policy_version,
+    purchaseTerms.refundPolicyVersion
+  )
   assert.equal(
     original.payment_intent_data?.metadata?.payment_plan,
     "pay_in_full"
@@ -57,6 +67,41 @@ test("sends each fixed price and offer identifier to Stripe", () => {
   )
 })
 
+test("builds a versioned server-side terms acceptance record", () => {
+  const acceptedAt = new Date("2026-08-24T21:30:00.000Z")
+
+  assert.deepEqual(buildTermsAcceptanceMetadata(acceptedAt), {
+    terms_accepted: "true",
+    terms_accepted_at: "2026-08-24T21:30:00.000Z",
+    terms_version: "2026-08-24",
+    refund_policy_version: "2026-08-24",
+  })
+})
+
+test("accepts terms only for the matching program and offer", () => {
+  const metadata = {
+    product: "caslin-partner-program",
+    payment_plan: "partner_access",
+  }
+
+  assert.equal(
+    sessionCanAcceptTerms(
+      metadata,
+      "caslin-partner-program",
+      "partner_access"
+    ),
+    true
+  )
+  assert.equal(
+    sessionCanAcceptTerms(metadata, "caslin-partner-program", "pay_in_full"),
+    false
+  )
+  assert.equal(
+    sessionCanAcceptTerms(metadata, "different-product", "partner_access"),
+    false
+  )
+})
+
 test("lets Stripe select the enabled payment methods", async () => {
   const route = await readFile(
     new URL("../src/app/api/checkout/route.ts", import.meta.url),
@@ -64,4 +109,37 @@ test("lets Stripe select the enabled payment methods", async () => {
   )
 
   assert.doesNotMatch(route, /payment_method_types/)
+})
+
+test("requires versioned purchase terms on the checkout form", async () => {
+  const form = await readFile(
+    new URL(
+      "../src/components/checkout/checkout-form.tsx",
+      import.meta.url
+    ),
+    "utf8"
+  )
+
+  assert.match(form, /type="checkbox"/)
+  assert.match(form, /required/)
+  assert.match(form, /\/api\/checkout\/accept-terms/)
+  assert.match(form, /\/terms/)
+  assert.match(form, /\/refund-policy/)
+  assert.match(form, /including Klarna/)
+})
+
+test("publishes the friendly terms and refund policy routes", async () => {
+  const [terms, refundPolicy] = await Promise.all([
+    readFile(new URL("../src/app/terms/page.tsx", import.meta.url), "utf8"),
+    readFile(
+      new URL("../src/app/refund-policy/page.tsx", import.meta.url),
+      "utf8"
+    ),
+  ])
+
+  assert.match(terms, /Friendly Purchase Terms/)
+  assert.match(terms, /USD\s+4,997 or USD 999/)
+  assert.match(refundPolicy, /200 calls per week/)
+  assert.match(refundPolicy, /four consecutive weeks/)
+  assert.match(refundPolicy, /USD 10,000/)
 })

@@ -158,18 +158,23 @@ function CheckoutPaymentFields({ plan }: { plan: PaymentPlan }) {
       return
     }
 
-    const result = await checkoutState.checkout.confirm({
-      returnUrl: `${window.location.origin}/thank-you?session_id=${checkoutState.checkout.id}`,
-      email: trimmedEmail,
-    })
+    try {
+      const result = await checkoutState.checkout.confirm({
+        email: trimmedEmail,
+      })
 
-    if (result.type === "error") {
-      setError(result.error.message)
+      if (result.type === "error") {
+        setError(result.error.message)
+        setIsSubmitting(false)
+        return
+      }
+
+      router.push(`/thank-you?session_id=${result.session.id}`)
+    } catch (confirmationError) {
+      console.error(confirmationError)
+      setError("Payment could not be completed. Please try again.")
       setIsSubmitting(false)
-      return
     }
-
-    router.push(`/thank-you?session_id=${result.session.id}`)
   }
 
   return (

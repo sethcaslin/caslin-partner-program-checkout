@@ -131,6 +131,19 @@ test("requires versioned purchase terms on the checkout form", async () => {
   assert.match(form, /country: "US"/)
 })
 
+test("confirms payment without sending a duplicate return URL", async () => {
+  const form = await readFile(
+    new URL(
+      "../src/components/checkout/checkout-form.tsx",
+      import.meta.url
+    ),
+    "utf8"
+  )
+
+  assert.doesNotMatch(form, /returnUrl:/)
+  assert.match(form, /Payment could not be completed\. Please try again\./)
+})
+
 test("publishes the purchase terms and refund policy routes", async () => {
   const [checkout, terms, refundPolicy] = await Promise.all([
     readFile(

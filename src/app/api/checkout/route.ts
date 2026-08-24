@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server"
-import type Stripe from "stripe"
 
-import { checkoutProduct, getPaymentPlan } from "@/lib/checkout"
+import { buildCheckoutSessionParams, getPaymentPlan } from "@/lib/checkout"
 import { getStripe } from "@/lib/stripe"
 
 export const runtime = "nodejs"
@@ -37,38 +36,7 @@ export async function POST(request: Request) {
       ""
     )
     const returnUrl = `${appUrl}/thank-you?session_id={CHECKOUT_SESSION_ID}`
-    const metadata = {
-      product: checkoutProduct.slug,
-      payment_plan: plan.id,
-    }
-
-    const params: Stripe.Checkout.SessionCreateParams = {
-      mode: "payment",
-      ui_mode: "elements",
-      adaptive_pricing: {
-        enabled: false,
-      },
-      return_url: returnUrl,
-      billing_address_collection: "auto",
-      customer_creation: "if_required",
-      line_items: [
-        {
-          quantity: 1,
-          price_data: {
-            currency: plan.currency,
-            unit_amount: plan.unitAmount,
-            product_data: {
-              name: checkoutProduct.name,
-              description: checkoutProduct.shortDescription,
-            },
-          },
-        },
-      ],
-      metadata,
-      payment_intent_data: {
-        metadata,
-      },
-    }
+    const params = buildCheckoutSessionParams(plan, returnUrl)
 
     const session = await stripe.checkout.sessions.create(params)
 

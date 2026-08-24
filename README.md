@@ -10,7 +10,7 @@ cp .env.example .env.local
 npm run dev
 ```
 
-The checkout creates a Stripe Checkout Session for a one-time $4,997 USD payment and redirects successful payments to `/thank-you`.
+The checkout creates Stripe Checkout Sessions for a one-time $4,997 USD payment at `/` and a one-time $999 USD partner access offer at `/partner-access`. Successful payments redirect to `/thank-you`.
 
 ## Environment
 

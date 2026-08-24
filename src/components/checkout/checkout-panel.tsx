@@ -3,11 +3,9 @@
 import { ShieldCheck } from "@phosphor-icons/react/dist/csr/ShieldCheck"
 
 import { CheckoutForm } from "@/components/checkout/checkout-form"
-import { paymentPlans } from "@/lib/checkout"
+import type { PaymentPlan } from "@/lib/checkout"
 
-export function CheckoutPanel() {
-  const plan = paymentPlans[0]
-
+export function CheckoutPanel({ plan }: { plan: PaymentPlan }) {
   return (
     <div className="grid gap-6">
       <div>

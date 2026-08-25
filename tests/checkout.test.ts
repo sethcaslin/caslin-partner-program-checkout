@@ -144,6 +144,97 @@ test("confirms payment without sending a duplicate return URL", async () => {
   assert.match(form, /Payment could not be completed\. Please try again\./)
 })
 
+test("places merchant support directly below the shared enrollment button", async () => {
+  const [form, merchantContact] = await Promise.all([
+    readFile(
+      new URL(
+        "../src/components/checkout/checkout-form.tsx",
+        import.meta.url
+      ),
+      "utf8"
+    ),
+    readFile(
+      new URL(
+        "../src/components/checkout/merchant-contact.tsx",
+        import.meta.url
+      ),
+      "utf8"
+    ).catch(() => ""),
+  ])
+
+  const buttonEnd = form.indexOf("</Button>")
+  const support = form.indexOf("<MerchantSupport />")
+  const existingSecurityCopy = form.indexOf(
+    "One enrollment purchase · Securely processed by Stripe"
+  )
+
+  assert.ok(buttonEnd >= 0)
+  assert.ok(support > buttonEnd)
+  assert.ok(support < existingSecurityCopy)
+  assert.match(merchantContact, /className="cpp-support"/)
+  assert.match(merchantContact, /mailto:ben@gochrz\.com/)
+  assert.match(merchantContact, /we reply within one business day/)
+  assert.match(merchantContact, /CASLINPARTNERPROGRAM/)
+})
+
+test("places the merchant footer below both checkout columns", async () => {
+  const [page, merchantContact] = await Promise.all([
+    readFile(
+      new URL(
+        "../src/components/checkout/checkout-page.tsx",
+        import.meta.url
+      ),
+      "utf8"
+    ),
+    readFile(
+      new URL(
+        "../src/components/checkout/merchant-contact.tsx",
+        import.meta.url
+      ),
+      "utf8"
+    ).catch(() => ""),
+  ])
+
+  const columnsEnd = page.indexOf("</section>")
+  const footer = page.indexOf("<MerchantFooter />")
+
+  assert.ok(columnsEnd >= 0)
+  assert.ok(footer > columnsEnd)
+  assert.match(merchantContact, /className="cpp-footer"/)
+  assert.match(merchantContact, /mailto:ben@gochrz\.com/)
+  assert.match(merchantContact, /mailto:seth@caslinpartnerprogram\.com/)
+  assert.match(merchantContact, /tel:\+19733567881/)
+  assert.match(merchantContact, /Seth Caslin LLC/)
+  assert.match(merchantContact, /30 N Gould St, Ste N/)
+  assert.match(merchantContact, /Sheridan, WY 82801, United States/)
+  assert.match(merchantContact, /href="\/terms"/)
+  assert.match(merchantContact, /href="\/refund-policy"/)
+  assert.match(
+    merchantContact,
+    /href="https:\/\/caslinpartnerprogram\.com\/privacy-policy"/
+  )
+})
+
+test("styles the merchant footer for desktop and mobile widths", async () => {
+  const styles = await readFile(
+    new URL("../src/app/globals.css", import.meta.url),
+    "utf8"
+  )
+
+  assert.match(styles, /\.cpp-support/)
+  assert.match(styles, /\.cpp-footer/)
+  assert.match(styles, /\.cpp-footer-inner/)
+  assert.match(styles, /\.cpp-cols/)
+  assert.match(styles, /\.cpp-bottom/)
+  assert.match(styles, /\.cpp-col\s*\{[\s\S]*?min-width:\s*0;/)
+  assert.match(styles, /\.cpp-col a\s*\{[\s\S]*?overflow-wrap:\s*anywhere;/)
+  assert.match(styles, /@media\s*\(max-width:\s*640px\)/)
+  assert.match(
+    styles,
+    /\.cpp-bottom \.cpp-processor\s*\{[\s\S]*?margin-left:\s*0;[\s\S]*?width:\s*100%/
+  )
+})
+
 test("publishes the purchase terms and refund policy routes", async () => {
   const [checkout, terms, refundPolicy, policyPage] = await Promise.all([
     readFile(

@@ -4,6 +4,7 @@ import { Package } from "@phosphor-icons/react/dist/ssr/Package"
 import { ShieldCheck } from "@phosphor-icons/react/dist/ssr/ShieldCheck"
 
 import { CheckoutPanel } from "@/components/checkout/checkout-panel"
+import { MerchantFooter } from "@/components/checkout/merchant-contact"
 import { Badge } from "@/components/ui/badge"
 import {
   Card,
@@ -133,6 +134,7 @@ export function CheckoutPage({ plan }: { plan: PaymentPlan }) {
           </Card>
         </aside>
       </section>
+      <MerchantFooter />
     </main>
   )
 }

@@ -17,6 +17,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button"
 import type { PaymentPlan } from "@/lib/checkout"
 import { CardBrands } from "./card-brands"
+import { MerchantSupport } from "./merchant-contact"
 
 type CheckoutFormProps = {
   plan: PaymentPlan
@@ -328,6 +329,8 @@ function CheckoutPaymentFields({ plan }: { plan: PaymentPlan }) {
           </>
         )}
       </Button>
+
+      <MerchantSupport />
 
       <div className="grid gap-1 text-center">
         <p className="flex items-center justify-center gap-1.5 text-sm font-semibold text-slate-600">

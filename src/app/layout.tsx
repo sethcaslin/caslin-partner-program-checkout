@@ -16,7 +16,7 @@ const headingFont = Sora({
 })
 
 export const metadata: Metadata = {
-  title: "Caslin Partner Program Checkout",
+  title: "Caslin Partner Program Onboarding",
   description: "Secure checkout for the Caslin Partner Program.",
 }
 
